@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Leagues</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0B0E;--bg2:#111319;--card:#161920;--border:rgba(242,243,245,0.10);--gold:#C9A227;--orange:#FB4F14;--text:#F2F3F5;--dim:rgba(242,243,245,0.6);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;padding:0;}
+.wrap{max-width:900px;margin:0 auto;padding:50px 24px 80px;}
+header{text-align:center;margin-bottom:50px;}
+header h1{font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);font-weight:700;margin:0 0 8px;letter-spacing:0.02em;}
+header .tagline{color:var(--dim);font-size:16px;margin:0;}
+header .accent{width:80px;height:4px;background:var(--gold);margin:16px auto;}
+section{margin-bottom:40px;}
+.sport-title{font-family:'Oswald',sans-serif;font-size:14px;color:var(--gold);text-transform:uppercase;letter-spacing:0.15em;font-weight:600;margin:0 0 16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.sport-title .status{font-size:11px;color:var(--dim);margin-left:8px;letter-spacing:0.08em;}
+.league-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.league-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;text-decoration:none;color:inherit;display:block;transition:transform 0.15s,border-color 0.15s;}
+.league-card:hover{transform:translateY(-2px);border-color:var(--orange);}
+.league-card .name{font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;color:var(--text);margin:0 0 6px;}
+.league-card .meta{font-size:13px;color:var(--dim);}
+.league-card.disabled{opacity:0.4;pointer-events:none;}
+.footer{text-align:center;padding-top:40px;color:var(--dim);font-size:12px;letter-spacing:0.08em;}
+@media (max-width: 640px) {
+  .wrap{padding:30px 16px 60px;}
+  header{margin-bottom:32px;}
+  .league-card{padding:16px;}
+  .league-card .name{font-size:17px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>SUPER LEAGUES</h1>
+<div class="accent"></div>
+<p class="tagline">Multiple sports. Multiple formats. One home.</p>
+</header>
+
+<section>
+<h2 class="sport-title">Football <span class="status">active</span></h2>
+<div class="league-grid">
+<a class="league-card" href="football-rivals-11v11-a/">
+<div class="name">NFL Rivals 11v11 — League A</div>
+<div class="meta">8 franchises · Sleeper</div>
+</a>
+<a class="league-card" href="football-rivals-11v11-b/">
+<div class="name">NFL Rivals 11v11 — League B</div>
+<div class="meta">8 franchises · Sleeper</div>
+</a>
+</div>
+</section>
+
+<section>
+<h2 class="sport-title">Basketball <span class="status">coming soon</span></h2>
+<div class="league-grid">
+<div class="league-card disabled">
+<div class="name">TBD</div>
+<div class="meta">Formats in design</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2 class="sport-title">Baseball <span class="status">coming soon</span></h2>
+<div class="league-grid">
+<div class="league-card disabled">
+<div class="name">TBD</div>
+<div class="meta">Formats in design</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2 class="sport-title">Hockey <span class="status">coming soon</span></h2>
+<div class="league-grid">
+<div class="league-card disabled">
+<div class="name">TBD</div>
+<div class="meta">Formats in design</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2 class="sport-title">Racing <span class="status">coming soon</span></h2>
+<div class="league-grid">
+<div class="league-card disabled">
+<div class="name">TBD</div>
+<div class="meta">Formats in design</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2 class="sport-title">Betting &amp; Pools <span class="status">coming soon</span></h2>
+<div class="league-grid">
+<div class="league-card disabled">
+<div class="name">Survivor · Pick 'em · Boxes</div>
+<div class="meta">Formats in design</div>
+</div>
+</div>
+</section>
+
+<div class="footer">BROUGHT TO YOU BY SUPERLEAGUES</div>
+</div>
+</body>
+</html>
