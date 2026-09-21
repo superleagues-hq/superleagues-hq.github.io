@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to SuperLeagues</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0B0E;--card:#161920;--border:rgba(242,243,245,0.10);--gold:#C9A227;--orange:#FB4F14;--navy:#0B2265;--red:#C8102E;--text:#F2F3F5;--dim:rgba(242,243,245,0.65);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.6;}
+.wrap{max-width:800px;margin:0 auto;padding:32px 20px 80px;}
+.hero{text-align:center;padding:40px 16px 32px;border-bottom:1px solid var(--border);margin-bottom:36px;}
+.hero .kicker{font-family:'Oswald',sans-serif;font-size:12px;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:14px;font-weight:700;}
+.hero h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(32px,7vw,48px);font-weight:900;margin:0 0 14px;line-height:1.05;}
+.hero .sub{font-size:16px;color:var(--dim);max-width:520px;margin:0 auto;line-height:1.6;}
+section{margin-bottom:36px;}
+h2{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--gold);letter-spacing:0.04em;margin:0 0 16px;text-transform:uppercase;}
+h3{font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;margin:0 0 8px;color:var(--text);}
+p{margin:0 0 14px;}
+a{color:var(--orange);text-decoration:none;font-weight:600;}
+a:hover{color:var(--gold);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:14px;}
+.card h3{margin-bottom:10px;}
+.card p{margin:0;font-size:15px;color:var(--dim);}
+.cta{display:inline-block;padding:14px 24px;background:var(--orange);color:#FFF;text-decoration:none;border-radius:8px;font-weight:700;font-size:15px;letter-spacing:0.02em;margin:6px 0;}
+.cta:hover{background:var(--gold);color:#000;}
+.cta.secondary{background:transparent;color:var(--orange);border:2px solid var(--orange);}
+.cta.secondary:hover{background:var(--orange);color:#FFF;}
+.leagues{display:grid;grid-template-columns:1fr;gap:12px;}
+@media (min-width:600px){.leagues{grid-template-columns:1fr 1fr;}}
+.league-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;text-decoration:none;color:inherit;display:block;transition:transform 0.15s,border-color 0.15s;}
+.league-card:hover{transform:translateY(-2px);border-color:var(--orange);}
+.league-card .name{font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.league-card .meta{font-size:13px;color:var(--dim);}
+.nav-row{padding:14px 0;border-bottom:1px solid var(--border);font-size:15px;}
+.nav-row:last-child{border-bottom:none;}
+.nav-row .label{font-family:'Oswald',sans-serif;font-weight:600;color:var(--gold);font-size:13px;letter-spacing:0.08em;text-transform:uppercase;display:block;margin-bottom:4px;}
+.feature{padding:14px 0;border-bottom:1px solid var(--border);font-size:15px;line-height:1.55;}
+.feature:last-child{border-bottom:none;}
+.feature .emoji{display:inline-block;width:28px;font-size:18px;}
+.feature .name{font-family:'Oswald',sans-serif;font-weight:600;color:var(--gold);}
+ul{padding-left:20px;margin:0 0 14px;}
+li{margin-bottom:8px;font-size:15px;color:var(--dim);}
+li strong{color:var(--text);}
+.footer{text-align:center;padding-top:40px;margin-top:40px;border-top:1px solid var(--border);color:var(--dim);font-size:13px;letter-spacing:0.05em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="kicker">Welcome to</div>
+  <h1>SuperLeagues</h1>
+  <p class="sub">Everything you need to dominate your fantasy league. Read this once. Come back whenever.</p>
+</div>
+
+<section>
+  <h2>🏈 Your Leagues</h2>
+  <div class="leagues">
+    <a class="league-card" href="/football-rivals-11v11-a/">
+      <div class="name">NFL Rivals 11v11 — League A</div>
+      <div class="meta">8 teams · Sleeper</div>
+    </a>
+    <a class="league-card" href="/football-rivals-11v11-b/">
+      <div class="name">NFL Rivals 11v11 — League B</div>
+      <div class="meta">8 teams · Sleeper</div>
+    </a>
+    <a class="league-card" href="/football-dodge-city/">
+      <div class="name">The Dodge City Football League</div>
+      <div class="meta">16 teams · ESPN</div>
+    </a>
+  </div>
+</section>
+
+<section>
+  <h2>🧭 How to Navigate</h2>
+  <p>Every page has the same navigation bar at the top. Here's what each one does:</p>
+  <div class="card" style="padding:14px 20px;">
+    <div class="nav-row"><span class="label">HOME</span>The league homepage. Power rankings, top teams, quick look.</div>
+    <div class="nav-row"><span class="label">NEWS</span>League-wide newspaper. Weekly recap, game stories, all the drama.</div>
+    <div class="nav-row"><span class="label">STANDINGS</span>Full W-L-T records, points for, points against.</div>
+    <div class="nav-row"><span class="label">PLAYOFFS</span>The bracket (fills in as the season progresses).</div>
+    <div class="nav-row"><span class="label">ARCHIVE</span>Every past week, saved forever. Browse back anytime.</div>
+  </div>
+  <p style="margin-top:16px;font-size:14px;color:var(--dim);">↩ Click any team name in standings or rankings to see their team page.</p>
+</section>
+
+<section>
+  <h2>📝 Your Weekly Routine</h2>
+  <p>Once a week. Takes 2 minutes. Do this every Tuesday–Saturday.</p>
+  <div class="card">
+    <h3>1. Submit the weekly form</h3>
+    <p>Lock of the Week, smack talk, bad beats, regrets, big wins, and bulletin board for your next opponent.</p>
+    <div style="margin-top:14px;">
+      <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSd2nMBa90mUA_H0UBmf8rNDCI7bm6_k64andvA2mBt7bT522g/viewform" target="_blank">Rivals A Form</a>
+      <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSerMnjAaAkaewug2RVXlBV83jjR2Ubz3ADe84Hj95SexX4ffw/viewform" target="_blank">Rivals B Form</a>
+      <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSeOuFR-V6-Rhy_sVkcKYkvOrLXiq9_tGbjGSpwgArCaDwup8g/viewform" target="_blank">Dodge City Form</a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>2. Check the league news</h3>
+    <p>See how everyone did, find out who's hot, read the smack talk.</p>
+    <div style="margin-top:14px;">
+      <a class="cta secondary" href="/football-rivals-11v11-a/news/">A News</a>
+      <a class="cta secondary" href="/football-rivals-11v11-b/news/">B News</a>
+      <a class="cta secondary" href="/football-dodge-city/news/">Dodge City News</a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>3. Check your team page</h3>
+    <p>Your roster, schedule, results, Season Activity stats, and any bulletin board messages from opponents.</p>
+  </div>
+</section>
+
+<section>
+  <h2>🎯 What is All This Stuff?</h2>
+  <div class="card" style="padding:10px 22px;">
+    <div class="feature"><span class="emoji">🎯</span><span class="name">Lock of the Week</span> — Pick one NFL side against the spread. Tracked all season. Bragging rights.</div>
+    <div class="feature"><span class="emoji">😤</span><span class="name">Smack Talk</span> — Say it. We publish it in the weekly news.</div>
+    <div class="feature"><span class="emoji">💀</span><span class="name">Bad Beats</span> — Call out the player who cost you the week.</div>
+    <div class="feature"><span class="emoji">🙋</span><span class="name">Put Me In Coach</span> — The player you should have started but didn't.</div>
+    <div class="feature"><span class="emoji">💰</span><span class="name">Big Wins</span> — Parlays, DFS, prop bets. Post your wins here.</div>
+    <div class="feature"><span class="emoji">🪧</span><span class="name">Bulletin Board</span> — Write a message to your NEXT week's opponent. It shows up on THEIR team page.</div>
+  </div>
+</section>
+
+<section>
+  <h2>⚠️ House Rules</h2>
+  <ul>
+    <li><strong>Answer trade requests.</strong> A quick "no thanks" beats being left on read.</li>
+    <li><strong>Set your lineup by Saturday night.</strong> No empty slots, no bye-week starters.</li>
+    <li><strong>Submit the form each week.</strong> The news and stats depend on it.</li>
+    <li><strong>Keep it fun.</strong> This is fantasy football. Talk smack, but don't be a dick.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>🔗 All Links, One Place</h2>
+  <div class="card" style="padding:14px 20px;">
+    <div class="nav-row"><span class="label">Rivals A</span><a href="/football-rivals-11v11-a/">Home</a> · <a href="/football-rivals-11v11-a/news/">News</a> · <a href="/football-rivals-11v11-a/teams.html">Standings</a> · <a href="/football-rivals-11v11-a/playoffs.html">Playoffs</a> · <a href="/football-rivals-11v11-a/archive/">Archive</a></div>
+    <div class="nav-row"><span class="label">Rivals B</span><a href="/football-rivals-11v11-b/">Home</a> · <a href="/football-rivals-11v11-b/news/">News</a> · <a href="/football-rivals-11v11-b/teams.html">Standings</a> · <a href="/football-rivals-11v11-b/playoffs.html">Playoffs</a> · <a href="/football-rivals-11v11-b/archive/">Archive</a></div>
+    <div class="nav-row"><span class="label">Dodge City</span><a href="/football-dodge-city/">Home</a> · <a href="/football-dodge-city/news/">News</a> · <a href="/football-dodge-city/teams.html">Standings</a> · <a href="/football-dodge-city/playoffs.html">Playoffs</a> · <a href="/football-dodge-city/archive/">Archive</a></div>
+    <div class="nav-row"><span class="label">Forms</span><a href="https://docs.google.com/forms/d/e/1FAIpQLSd2nMBa90mUA_H0UBmf8rNDCI7bm6_k64andvA2mBt7bT522g/viewform" target="_blank">Rivals A</a> · <a href="https://docs.google.com/forms/d/e/1FAIpQLSerMnjAaAkaewug2RVXlBV83jjR2Ubz3ADe84Hj95SexX4ffw/viewform" target="_blank">Rivals B</a> · <a href="https://docs.google.com/forms/d/e/1FAIpQLSeOuFR-V6-Rhy_sVkcKYkvOrLXiq9_tGbjGSpwgArCaDwup8g/viewform" target="_blank">Dodge City</a></div>
+  </div>
+</section>
+
+<div class="footer">
+  BROUGHT TO YOU BY SUPERLEAGUES<br>
+  Questions? DM the Commissioner.
+</div>
+
+</div>
+</body>
+</html>
