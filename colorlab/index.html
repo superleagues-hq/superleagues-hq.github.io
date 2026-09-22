@@ -134,7 +134,13 @@ body{margin:0;background:var(--ui-bg);color:var(--ui-text);font-family:'Inter',-
     <div class="btn-row">
       <button id="resetBtn" class="secondary">Reset</button>
       <button id="exportBtn" class="secondary">JSON</button>
+    </div>
+    <div class="btn-row">
       <button id="downloadBtn">Download HTML</button>
+    </div>
+    <div class="btn-row">
+      <button id="saveCloudBtn" class="secondary" style="background:#1e293b;color:#fff;border-color:#1e293b;">☁ Save to Cloud</button>
+      <button id="listCloudBtn" class="secondary" style="background:#1e293b;color:#fff;border-color:#1e293b;">📂 My Themes</button>
     </div>
     <div class="saved-note" id="savedNote">Auto-saves as you edit</div>
   </aside>
@@ -194,6 +200,15 @@ body{margin:0;background:var(--ui-bg);color:var(--ui-text);font-family:'Inter',-
     </div>
   </section>
 
+</div>
+
+<div class="modal" id="themesModal">
+  <div class="inner">
+    <h2>My Themes</h2>
+    <p class="sub">Saved themes from the cloud. Click Load to apply.</p>
+    <div id="themesList" style="max-height:340px;overflow-y:auto;"></div>
+    <div class="btn-row"><button id="closeThemes">Close</button></div>
+  </div>
 </div>
 
 <div class="modal" id="jsonModal">
@@ -466,6 +481,140 @@ document.getElementById("downloadBtn").addEventListener("click", ()=>{
   URL.revokeObjectURL(url);
 });
 
+// ═══════════════════════════════════════════════
+// CLOUD SAVE / LOAD
+// ═══════════════════════════════════════════════
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzt1JQEu60TxfDw2WeSjOgd9ApvttLGclJs7BhbzF2rcG8_3zj5pEMaJ2bfqE4BltQ3/exec";
+
+let lastSavedId = null;
+
+async function getSecret(){
+  // We don't have the secret in the browser — the sheet accepts theme saves
+  // without the shared secret (bypassed in Apps Script for these actions).
+  return "";
+}
+
+async function cloudSave(){
+  const s = getState();
+  const btn = document.getElementById("saveCloudBtn");
+  const origText = btn.textContent;
+  btn.textContent = "Saving...";
+  btn.disabled = true;
+
+  try {
+    const payload = {
+      action: "saveTheme",
+      secret: "",
+      theme: {
+        id: lastSavedId || null,
+        team_name: s.teamName,
+        team_slug: (s.teamName || "team").toLowerCase().replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,""),
+        primary: s.primary,
+        secondary: s.secondary,
+        tertiary: s.tertiary,
+        accent: s.accent,
+        background: s.background,
+        logo_data: s.logoData || ""
+      }
+    };
+    const res = await fetch(WEBAPP_URL, {
+      method: "POST",
+      headers: {"Content-Type": "text/plain;charset=utf-8"},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(data.ok){
+      lastSavedId = data.id;
+      btn.textContent = "✓ Saved";
+      setTimeout(()=>{ btn.textContent = origText; btn.disabled = false; }, 2000);
+    } else {
+      btn.textContent = "✗ " + (data.error || "Error");
+      setTimeout(()=>{ btn.textContent = origText; btn.disabled = false; }, 3000);
+    }
+  } catch(e){
+    btn.textContent = "✗ Network error";
+    setTimeout(()=>{ btn.textContent = origText; btn.disabled = false; }, 3000);
+  }
+}
+
+async function cloudList(){
+  const modal = document.getElementById("themesModal");
+  const list = document.getElementById("themesList");
+  list.innerHTML = '<div style="text-align:center;color:#888;padding:20px;">Loading...</div>';
+  modal.classList.add("show");
+
+  try {
+    const url = WEBAPP_URL + "?action=listThemes";
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!data.ok || !data.themes || data.themes.length === 0){
+      list.innerHTML = '<div style="text-align:center;color:#888;padding:20px;font-style:italic;">No themes saved yet.</div>';
+      return;
+    }
+    list.innerHTML = "";
+    data.themes.forEach(t => {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex;align-items:center;gap:10px;padding:12px;background:#0A0B0E;border:1px solid rgba(242,243,245,0.12);border-radius:8px;margin-bottom:8px;";
+      row.innerHTML = 
+        '<div style="display:flex;gap:3px;">' +
+          '<div style="width:14px;height:14px;border-radius:3px;background:'+t.primary+';"></div>' +
+          '<div style="width:14px;height:14px;border-radius:3px;background:'+t.secondary+';"></div>' +
+          '<div style="width:14px;height:14px;border-radius:3px;background:'+t.accent+';"></div>' +
+        '</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-family:Oswald,sans-serif;font-weight:600;font-size:14px;">'+t.team_name+'</div>' +
+          '<div style="font-size:11px;color:#888;">'+ (t.saved_at ? new Date(t.saved_at).toLocaleString() : "") +'</div>' +
+        '</div>' +
+        '<button data-id="'+t.id+'" class="load-theme-btn" style="padding:8px 14px;background:#C9A227;color:#000;border:none;border-radius:6px;font-family:Oswald,sans-serif;font-weight:700;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">Load</button>';
+      list.appendChild(row);
+    });
+    // Wire load buttons
+    list.querySelectorAll(".load-theme-btn").forEach(b => {
+      b.addEventListener("click", () => cloudLoad(b.dataset.id));
+    });
+  } catch(e){
+    list.innerHTML = '<div style="text-align:center;color:#c00;padding:20px;">Error: '+e.message+'</div>';
+  }
+}
+
+async function cloudLoad(id){
+  try {
+    const url = WEBAPP_URL + "?action=getTheme&id=" + encodeURIComponent(id);
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!data.ok || !data.theme){
+      alert("Could not load theme: " + (data.error || "unknown"));
+      return;
+    }
+    const t = data.theme;
+    lastSavedId = t.id;
+    setState({
+      teamName: t.team_name || "Team Name",
+      primary: t.primary || "#000000",
+      secondary: t.secondary || "#FFFFFF",
+      tertiary: t.tertiary || "#C9A227",
+      accent: t.accent || "#FB4F14",
+      background: t.background || "#0A0B0E",
+      logoData: t.logo_data || null,
+      logoFileName: t.logo_data ? "cloud-logo.png" : null
+    });
+    applyColors();
+    saveLocal();
+    document.getElementById("themesModal").classList.remove("show");
+  } catch(e){
+    alert("Error loading theme: " + e.message);
+  }
+}
+
+document.getElementById("saveCloudBtn").addEventListener("click", cloudSave);
+document.getElementById("listCloudBtn").addEventListener("click", cloudList);
+document.getElementById("closeThemes").addEventListener("click", () => {
+  document.getElementById("themesModal").classList.remove("show");
+});
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
 (function init(){
   const saved = loadLocal();
   if(saved) setState(saved);
