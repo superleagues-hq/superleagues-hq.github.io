@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SuperLeagues Team Page Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ui-bg:#0A0B0E;--ui-card:#161920;--ui-border:rgba(242,243,245,0.12);--ui-gold:#C9A227;--ui-text:#F2F3F5;--ui-dim:rgba(242,243,245,0.65);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--ui-bg);color:var(--ui-text);font-family:'Inter',-apple-system,sans-serif;min-height:100vh;}
+.topbar{background:var(--ui-card);border-bottom:1px solid var(--ui-border);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.topbar h1{font-family:'Oswald',sans-serif;font-size:18px;margin:0;color:var(--ui-gold);letter-spacing:0.1em;text-transform:uppercase;}
+.topbar .spacer{flex:1;}
+.topbar a{color:var(--ui-dim);text-decoration:none;font-size:13px;}
+.topbar a:hover{color:var(--ui-gold);}
+.layout{display:flex;gap:20px;padding:20px;align-items:flex-start;flex-wrap:wrap;}
+.controls{background:var(--ui-card);border:1px solid var(--ui-border);border-radius:12px;padding:20px;width:340px;flex-shrink:0;}
+.controls h2{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ui-gold);margin:20px 0 12px;}
+.controls h2:first-child{margin-top:0;}
+.controls label{display:block;font-size:11px;color:var(--ui-dim);text-transform:uppercase;letter-spacing:0.08em;margin:12px 0 6px;font-weight:600;}
+.controls input[type="text"]{width:100%;background:#0A0B0E;border:1px solid var(--ui-border);color:var(--ui-text);padding:10px 12px;border-radius:6px;font-size:14px;}
+.controls input[type="text"]:focus{outline:none;border-color:var(--ui-gold);}
+.controls input[type="text"].hex{font-family:ui-monospace,Menlo,monospace;letter-spacing:0.04em;flex:1;}
+.controls input[type="file"]{width:100%;font-size:12px;color:var(--ui-dim);padding:6px 0;}
+.controls input[type="color"]{width:44px;height:42px;padding:0;border:1px solid var(--ui-border);border-radius:6px;background:transparent;cursor:pointer;flex-shrink:0;}
+.controls select{width:100%;background:#0A0B0E;border:1px solid var(--ui-border);color:var(--ui-text);padding:10px 12px;border-radius:6px;font-size:14px;}
+.field-row{display:flex;gap:8px;align-items:center;}
+.logo-thumb{display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px;background:#0A0B0E;border:1px solid var(--ui-border);border-radius:6px;min-height:60px;}
+.logo-thumb img{height:40px;width:40px;object-fit:contain;background:rgba(255,255,255,0.05);border-radius:4px;padding:2px;}
+.logo-thumb .empty{font-size:11px;color:var(--ui-dim);font-style:italic;}
+.logo-thumb button{margin-left:auto;background:transparent;border:1px solid var(--ui-border);color:var(--ui-dim);font-size:10px;padding:4px 8px;border-radius:4px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;}
+.btn-row{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap;}
+.controls button{flex:1;min-width:90px;padding:12px;background:var(--ui-gold);color:#000;border:none;border-radius:6px;font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:11px;cursor:pointer;}
+.controls button:hover{background:#E0B835;}
+.controls button.secondary{background:transparent;color:var(--ui-text);border:1px solid var(--ui-border);}
+.controls button.secondary:hover{background:var(--ui-border);}
+.saved-note{font-size:11px;color:var(--ui-dim);margin-top:12px;text-align:center;}
+.preview-col{flex:1;min-width:400px;}
+.preview-note{font-size:12px;color:var(--ui-dim);margin-bottom:10px;letter-spacing:0.04em;}
+.preview-frame{background:var(--page-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.5);max-width:640px;transition:background 0.2s;}
+.team-page{max-width:640px;margin:0 auto;background:var(--page-bg);padding-bottom:30px;color:var(--page-text);transition:background 0.2s,color 0.2s;}
+.top-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:12px;background:var(--page-bg-darker);border-bottom:1px solid var(--page-line);}
+.top-strip a,.top-strip button{color:var(--page-secondary);text-decoration:none;font-weight:600;font-size:12px;background:none;border:none;font-family:inherit;padding:4px 6px;}
+.top-strip .toggle-btn{border:1px solid var(--page-line) !important;border-radius:14px;padding:4px 10px !important;}
+.masthead{padding:24px 20px 18px;text-align:center;border-bottom:4px solid var(--page-primary);}
+.masthead .logo-circle{width:96px;height:96px;border-radius:50%;margin:0 auto 12px;background:var(--page-primary);border:3px solid var(--page-accent);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:30px;color:var(--page-primary-text);overflow:hidden;}
+.masthead .logo-circle img{width:100%;height:100%;object-fit:contain;}
+.masthead .kicker{font-size:11px;letter-spacing:0.14em;color:var(--page-secondary);margin-bottom:6px;font-weight:700;text-transform:uppercase;}
+.masthead h1{font-family:'Oswald',sans-serif;font-size:30px;font-weight:700;margin:0 0 6px;color:var(--page-text);}
+.masthead .edition{font-size:12px;color:var(--page-dim);}
+.masthead .motto{font-family:'Oswald',sans-serif;font-style:italic;font-weight:700;color:var(--page-secondary);font-size:15px;margin:10px 0 0;}
+.block{padding:16px 20px 20px;}
+.section-title{font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:var(--page-secondary);margin:0 0 12px;padding-bottom:6px;border-bottom:2px solid var(--page-primary);}
+.card{background:var(--page-card);border-radius:10px;padding:14px;margin-bottom:10px;border-left:4px solid var(--page-primary);color:var(--page-text);}
+.card h3{font-family:'Oswald',sans-serif;font-size:14px;margin:0 0 4px;color:var(--page-text);}
+.card p{font-size:13px;line-height:1.5;margin:0;color:var(--page-dim);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat-box{background:var(--page-card);border-radius:8px;padding:10px 12px;}
+.stat-box .lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--page-dim);margin-bottom:4px;}
+.stat-box .val{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:var(--page-text);}
+.stat-box .val.win{color:#4ADE80;}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;background:var(--page-accent);color:var(--page-accent-text);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}
+.footer-preview{padding:16px 20px;text-align:center;font-size:11px;letter-spacing:0.08em;color:var(--page-dim);border-top:1px solid var(--page-line);margin-top:20px;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:100;}
+.modal.show{display:flex;}
+.modal .inner{background:var(--ui-card);border:1px solid var(--ui-border);border-radius:12px;padding:24px;max-width:640px;width:90%;max-height:80vh;overflow:auto;}
+.modal h2{font-family:'Oswald',sans-serif;color:var(--ui-gold);margin:0 0 8px;font-size:18px;}
+.modal .sub{color:var(--ui-dim);font-size:12px;margin:0 0 14px;}
+.modal textarea{width:100%;height:200px;background:#0A0B0E;color:var(--ui-text);border:1px solid var(--ui-border);border-radius:6px;padding:12px;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.5;resize:vertical;}
+.modal .btn-row{justify-content:flex-end;}
+.modal .btn-row button{padding:10px 20px;flex:0;}
+@media (max-width:900px){.controls{width:100%;}.preview-col{min-width:0;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Team Page Builder</h1>
+  <div class="spacer"></div>
+  <a href="/" target="_blank">← Hub</a>
+</div>
+
+<div class="layout">
+
+  <aside class="controls">
+    <h2>Team Identity</h2>
+
+    <label>Preload From</label>
+    <select id="teamSelect"><option value="">— Custom —</option></select>
+
+    <label>Team Name</label>
+    <input type="text" id="teamName" value="Steelers" maxlength="40">
+
+    <label>Logo (PNG/SVG)</label>
+    <input type="file" id="logoFile" accept="image/*">
+    <div class="logo-thumb" id="logoThumb">
+      <span class="empty">No logo uploaded</span>
+    </div>
+
+    <h2>Colors</h2>
+
+    <label>Primary</label>
+    <div class="field-row">
+      <input type="text" id="primary" class="hex" value="#000000" maxlength="7">
+      <input type="color" id="primaryPicker" value="#000000">
+    </div>
+
+    <label>Secondary</label>
+    <div class="field-row">
+      <input type="text" id="secondary" class="hex" value="#FFB612" maxlength="7">
+      <input type="color" id="secondaryPicker" value="#FFB612">
+    </div>
+
+    <label>Tertiary</label>
+    <div class="field-row">
+      <input type="text" id="tertiary" class="hex" value="#C9A227" maxlength="7">
+      <input type="color" id="tertiaryPicker" value="#C9A227">
+    </div>
+
+    <label>Accent</label>
+    <div class="field-row">
+      <input type="text" id="accent" class="hex" value="#FB4F14" maxlength="7">
+      <input type="color" id="accentPicker" value="#FB4F14">
+    </div>
+
+    <label>Background</label>
+    <div class="field-row">
+      <input type="text" id="background" class="hex" value="#0A0B0E" maxlength="7">
+      <input type="color" id="backgroundPicker" value="#0A0B0E">
+    </div>
+
+    <div class="btn-row">
+      <button id="resetBtn" class="secondary">Reset</button>
+      <button id="exportBtn" class="secondary">JSON</button>
+      <button id="downloadBtn">Download HTML</button>
+    </div>
+    <div class="saved-note" id="savedNote">Auto-saves as you edit</div>
+  </aside>
+
+  <section class="preview-col">
+    <div class="preview-note">Live preview — every edit updates instantly.</div>
+    <div class="preview-frame" id="previewFrame">
+      <div class="team-page" id="teamPage">
+
+        <div class="top-strip">
+          <div><a>First</a> <a>« Prev</a></div>
+          <button class="toggle-btn">View: Away</button>
+          <div><a>Next »</a> <a>Last</a></div>
+        </div>
+
+        <header class="masthead">
+          <div class="logo-circle" id="previewLogo">SL</div>
+          <div class="kicker">TEAM EDITION</div>
+          <h1 id="previewName">Steelers</h1>
+          <div class="edition">Tuesday, Sept 22, 2026 · Franchise Owner: CPU</div>
+          <div class="motto">"We Will Find a Way or Make One!"</div>
+        </header>
+
+        <div class="block">
+          <div class="section-title">📊 Record Summary</div>
+          <div class="stat-grid">
+            <div class="stat-box"><div class="lbl">Record</div><div class="val">3-2-0</div></div>
+            <div class="stat-box"><div class="lbl">Streak</div><div class="val win">W2</div></div>
+            <div class="stat-box"><div class="lbl">Points For</div><div class="val">642.8</div></div>
+            <div class="stat-box"><div class="lbl">Points Against</div><div class="val">598.4</div></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="section-title">⭐ Team Leaders</div>
+          <div class="card"><h3>Josh Allen (QB, 160.0 pts)</h3></div>
+          <div class="card"><h3>Christian McCaffrey (RB, 145.2 pts)</h3></div>
+          <div class="card"><h3>Justin Jefferson (WR, 132.6 pts)</h3></div>
+        </div>
+
+        <div class="block">
+          <div class="section-title">🏈 This Week's Matchup</div>
+          <div class="card">
+            <h3>vs. Ravens</h3>
+            <p>3-2-0 · <span class="badge">Rival</span></p>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="section-title">🎯 Gaps to Fill</div>
+          <div class="card"><h3>TE: ranked #12 of 20 — 8.3 pts below avg</h3></div>
+        </div>
+
+        <div class="footer-preview">BROUGHT TO YOU BY SUPERLEAGUES</div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="modal" id="jsonModal">
+  <div class="inner">
+    <h2>Exported JSON</h2>
+    <p class="sub">Copy this and send it back to the Commissioner.</p>
+    <textarea id="jsonText" readonly></textarea>
+    <div class="btn-row"><button id="closeJson">Close</button></div>
+  </div>
+</div>
+<script>
+const TEAMS = [
+  { name:"Bills", slug:"bills", primary:"#00338D", secondary:"#C60C30" },
+  { name:"Dolphins", slug:"dolphins", primary:"#008E97", secondary:"#FC4C02" },
+  { name:"Patriots", slug:"patriots", primary:"#002244", secondary:"#C60C30" },
+  { name:"Jets", slug:"jets", primary:"#125740", secondary:"#FFFFFF" },
+  { name:"Ravens", slug:"ravens", primary:"#241773", secondary:"#9E7C0C" },
+  { name:"Bengals", slug:"bengals", primary:"#FB4F14", secondary:"#000000" },
+  { name:"Browns", slug:"browns", primary:"#311D00", secondary:"#FF3C00" },
+  { name:"Steelers", slug:"steelers", primary:"#000000", secondary:"#FFB612" },
+  { name:"Texans", slug:"texans", primary:"#03202F", secondary:"#A71930" },
+  { name:"Colts", slug:"colts", primary:"#002C5F", secondary:"#A2AAAD" },
+  { name:"Jaguars", slug:"jaguars", primary:"#006778", secondary:"#D7A22A" },
+  { name:"Titans", slug:"titans", primary:"#0C2340", secondary:"#4B92DB" },
+  { name:"Broncos", slug:"broncos", primary:"#FB4F14", secondary:"#002244" },
+  { name:"Chiefs", slug:"chiefs", primary:"#E31837", secondary:"#FFB81C" },
+  { name:"Raiders", slug:"raiders", primary:"#000000", secondary:"#A5ACAF" },
+  { name:"Chargers", slug:"chargers", primary:"#0080C6", secondary:"#FFC20E" },
+  { name:"Cowboys", slug:"cowboys", primary:"#003594", secondary:"#869397" },
+  { name:"Giants", slug:"giants", primary:"#0B2265", secondary:"#A71930" },
+  { name:"Eagles", slug:"eagles", primary:"#004C54", secondary:"#A5ACAF" },
+  { name:"Commanders", slug:"commanders", primary:"#5A1414", secondary:"#FFB612" },
+  { name:"Packers", slug:"packers", primary:"#203731", secondary:"#FFB612" },
+  { name:"Vikings", slug:"vikings", primary:"#4F2683", secondary:"#FFC62F" },
+  { name:"Bears", slug:"bears", primary:"#0B162A", secondary:"#C83803" },
+  { name:"Lions", slug:"lions", primary:"#0076B6", secondary:"#B0B7BC" },
+  { name:"Saints", slug:"saints", primary:"#D3BC8D", secondary:"#101820" },
+  { name:"Falcons", slug:"falcons", primary:"#A71930", secondary:"#000000" },
+  { name:"Panthers", slug:"panthers", primary:"#0085CA", secondary:"#101820" },
+  { name:"Buccaneers", slug:"buccaneers", primary:"#D50A0A", secondary:"#34302B" },
+  { name:"49ers", slug:"49ers", primary:"#AA0000", secondary:"#B3995D" },
+  { name:"Seahawks", slug:"seahawks", primary:"#002244", secondary:"#69BE28" },
+  { name:"Cardinals", slug:"cardinals", primary:"#97233F", secondary:"#000000" },
+  { name:"Rams", slug:"rams", primary:"#003594", secondary:"#FFA300" },
+  { name:"Chicago Slide", slug:"chicago-slide", primary:"#041E42", secondary:"#FFFFFF" },
+  { name:"New Jersey Gang", slug:"new-jersey-gang", primary:"#CC0000", secondary:"#000000" },
+  { name:"Houston Oilers", slug:"houston-oilers", primary:"#14213D", secondary:"#CE1126" },
+  { name:"Old City Old Browns", slug:"old-city-old-browns", primary:"#F47321", secondary:"#005030" },
+  { name:"Iowa Ice", slug:"iowa-ice", primary:"#4B9CD3", secondary:"#13294B" },
+  { name:"New Jersey Beef", slug:"new-jersey-beef", primary:"#CC0033", secondary:"#000000" },
+  { name:"New Mexico Cholos", slug:"new-mexico-cholos", primary:"#990000", secondary:"#FFC72C" },
+  { name:"South Carolina Socals", slug:"south-carolina-socals", primary:"#154733", secondary:"#FEE123" }
+];
+
+function isValidHex(h){ return /^#[0-9A-Fa-f]{6}$/.test(h); }
+function shift(hex, amount){
+  if(!isValidHex(hex)) return hex;
+  const h = hex.slice(1);
+  let r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+  const f = amount / 100;
+  if(f > 0){ r = Math.round(r+(255-r)*f); g = Math.round(g+(255-g)*f); b = Math.round(b+(255-b)*f); }
+  else { r = Math.round(r*(1+f)); g = Math.round(g*(1+f)); b = Math.round(b*(1+f)); }
+  return "#" + [r,g,b].map(x => Math.max(0,Math.min(255,x)).toString(16).padStart(2,"0")).join("");
+}
+function textOn(bg){
+  if(!isValidHex(bg)) return "#FFFFFF";
+  const h = bg.slice(1);
+  const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+  return ((0.299*r + 0.587*g + 0.114*b) / 255) > 0.55 ? "#111111" : "#F8F0E8";
+}
+
+const STORAGE_KEY = "superleagues-builder-v1";
+let currentLogoData = null;
+
+function getState(){
+  return {
+    teamName: document.getElementById("teamName").value.trim(),
+    primary: document.getElementById("primary").value.trim(),
+    secondary: document.getElementById("secondary").value.trim(),
+    tertiary: document.getElementById("tertiary").value.trim(),
+    accent: document.getElementById("accent").value.trim(),
+    background: document.getElementById("background").value.trim(),
+    logoData: currentLogoData,
+    logoFileName: (currentLogoData ? (window._lastLogoName || "logo.png") : null)
+  };
+}
+function setState(s){
+  document.getElementById("teamName").value = s.teamName || "Team Name";
+  document.getElementById("primary").value = s.primary || "#0B2265";
+  document.getElementById("secondary").value = s.secondary || "#FFFFFF";
+  document.getElementById("tertiary").value = s.tertiary || "#C9A227";
+  document.getElementById("accent").value = s.accent || "#FB4F14";
+  document.getElementById("background").value = s.background || "#0A0B0E";
+  document.getElementById("primaryPicker").value = s.primary || "#0B2265";
+  document.getElementById("secondaryPicker").value = s.secondary || "#FFFFFF";
+  document.getElementById("tertiaryPicker").value = s.tertiary || "#C9A227";
+  document.getElementById("accentPicker").value = s.accent || "#FB4F14";
+  document.getElementById("backgroundPicker").value = s.background || "#0A0B0E";
+  currentLogoData = s.logoData || null;
+  window._lastLogoName = s.logoFileName || null;
+  renderLogoThumb();
+}
+
+function applyColors(){
+  const c = getState();
+  if(!isValidHex(c.primary) || !isValidHex(c.secondary) || !isValidHex(c.background)) return;
+  const text = textOn(c.background);
+  const dim = text === "#111111" ? "rgba(0,0,0,0.6)" : "rgba(248,240,232,0.7)";
+  const line = text === "#111111" ? "rgba(0,0,0,0.12)" : "rgba(242,243,245,0.16)";
+  const t = document.getElementById("teamPage");
+  t.style.setProperty("--page-bg", c.background);
+  t.style.setProperty("--page-bg-darker", shift(c.background,-6));
+  t.style.setProperty("--page-card", shift(c.background,6));
+  t.style.setProperty("--page-primary", c.primary);
+  t.style.setProperty("--page-secondary", c.secondary);
+  t.style.setProperty("--page-tertiary", c.tertiary);
+  t.style.setProperty("--page-accent", c.accent);
+  t.style.setProperty("--page-text", text);
+  t.style.setProperty("--page-dim", dim);
+  t.style.setProperty("--page-line", line);
+  t.style.setProperty("--page-primary-text", textOn(c.primary));
+  t.style.setProperty("--page-accent-text", textOn(c.accent));
+  document.getElementById("previewFrame").style.background = c.background;
+  document.getElementById("previewName").textContent = c.teamName || "Team Name";
+}
+
+function renderLogoThumb(){
+  const thumb = document.getElementById("logoThumb");
+  const logoEl = document.getElementById("previewLogo");
+  if(currentLogoData){
+    thumb.innerHTML = '<img src="'+currentLogoData+'" alt=""><span style="font-size:11px;color:rgba(242,243,245,0.65);flex:1;">'+(window._lastLogoName||"logo")+'</span><button id="clearLogo">× Remove</button>';
+    document.getElementById("clearLogo").onclick = clearLogo;
+    logoEl.innerHTML = '<img src="'+currentLogoData+'" alt="">';
+    logoEl.style.background = "transparent";
+    logoEl.style.borderColor = "transparent";
+  } else {
+    thumb.innerHTML = '<span class="empty">No logo uploaded</span>';
+    logoEl.innerHTML = (document.getElementById("teamName").value || "SL").split(" ").map(x=>x[0]).join("").slice(0,3).toUpperCase();
+    logoEl.style.background = "var(--page-primary)";
+    logoEl.style.borderColor = "var(--page-accent)";
+  }
+}
+function clearLogo(){
+  currentLogoData = null; window._lastLogoName = null;
+  document.getElementById("logoFile").value = "";
+  renderLogoThumb(); saveLocal();
+}
+
+function saveLocal(){
+  const s = getState();
+  if(s.logoData && s.logoData.length > 700000) s.logoData = null;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch(e){}
+  const note = document.getElementById("savedNote");
+  note.textContent = "✓ Saved " + new Date().toLocaleTimeString();
+  setTimeout(()=>{ note.textContent = "Auto-saves as you edit"; }, 2000);
+}
+function loadLocal(){
+  try { const raw = localStorage.getItem(STORAGE_KEY); if(raw) return JSON.parse(raw); } catch(e){}
+  return null;
+}
+
+function buildStandaloneHTML(){
+  const s = getState();
+  const text = textOn(s.background);
+  const dim = text === "#111111" ? "rgba(0,0,0,0.6)" : "rgba(248,240,232,0.7)";
+  const line = text === "#111111" ? "rgba(0,0,0,0.12)" : "rgba(242,243,245,0.16)";
+  const primaryText = textOn(s.primary);
+  const accentText = textOn(s.accent);
+  const logoHTML = currentLogoData ? '<img src="'+currentLogoData+'" alt="">' : (s.teamName||"SL").split(" ").map(x=>x[0]).join("").slice(0,3).toUpperCase();
+  return '<!DOCTYPE html>\n<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>'+s.teamName+' — Team Page</title><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;background:'+s.background+';color:'+text+";font-family:'Inter',sans-serif;}.wrap{max-width:640px;margin:0 auto;background:"+s.background+';min-height:100vh;padding-bottom:30px;}.top-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:12px;background:'+shift(s.background,-6)+';border-bottom:1px solid '+line+';}.top-strip a{color:'+s.secondary+';text-decoration:none;font-weight:600;font-size:12px;padding:4px 6px;}.masthead{padding:24px 20px 18px;text-align:center;border-bottom:4px solid '+s.primary+';}.logo-circle{width:96px;height:96px;border-radius:50%;margin:0 auto 12px;background:'+s.primary+';border:3px solid '+s.accent+';display:flex;align-items:center;justify-content:center;font-family:Oswald,sans-serif;font-weight:700;font-size:30px;color:'+primaryText+';overflow:hidden;}.logo-circle img{width:100%;height:100%;object-fit:contain;}.kicker{font-size:11px;letter-spacing:0.14em;color:'+s.secondary+';margin-bottom:6px;font-weight:700;text-transform:uppercase;}h1{font-family:Oswald,sans-serif;font-size:30px;font-weight:700;margin:0 0 6px;color:'+text+';}.edition{font-size:12px;color:'+dim+';}.motto{font-family:Oswald,sans-serif;font-style:italic;font-weight:700;color:'+s.secondary+';font-size:15px;margin:10px 0 0;}.block{padding:16px 20px 20px;}.section-title{font-family:Oswald,sans-serif;font-size:17px;font-weight:600;color:'+s.secondary+';margin:0 0 12px;padding-bottom:6px;border-bottom:2px solid '+s.primary+';}.card{background:'+shift(s.background,6)+';border-radius:10px;padding:14px;margin-bottom:10px;border-left:4px solid '+s.primary+';color:'+text+';}.card h3{font-family:Oswald,sans-serif;font-size:14px;margin:0 0 4px;color:'+text+';}.card p{font-size:13px;line-height:1.5;margin:0;color:'+dim+';}.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.stat-box{background:'+shift(s.background,6)+';border-radius:8px;padding:10px 12px;}.lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:'+dim+';margin-bottom:4px;}.val{font-family:Oswald,sans-serif;font-size:20px;font-weight:700;color:'+text+';}.val.win{color:#4ADE80;}.badge{display:inline-block;padding:2px 8px;border-radius:10px;background:'+s.accent+';color:'+accentText+';font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}.footer-preview{padding:16px 20px;text-align:center;font-size:11px;letter-spacing:0.08em;color:'+dim+';border-top:1px solid '+line+';margin-top:20px;}</style></head><body><div class="wrap"><div class="top-strip"><div><a>First</a> <a>« Prev</a></div><a>Next »</a></div><header class="masthead"><div class="logo-circle">'+logoHTML+'</div><div class="kicker">TEAM EDITION</div><h1>'+s.teamName+'</h1><div class="edition">Tuesday, Sept 22, 2026 · Franchise Owner: CPU</div><div class="motto">"We Will Find a Way or Make One!"</div></header><div class="block"><div class="section-title">📊 Record Summary</div><div class="stat-grid"><div class="stat-box"><div class="lbl">Record</div><div class="val">3-2-0</div></div><div class="stat-box"><div class="lbl">Streak</div><div class="val win">W2</div></div><div class="stat-box"><div class="lbl">Points For</div><div class="val">642.8</div></div><div class="stat-box"><div class="lbl">Points Against</div><div class="val">598.4</div></div></div></div><div class="block"><div class="section-title">⭐ Team Leaders</div><div class="card"><h3>Josh Allen (QB, 160.0 pts)</h3></div><div class="card"><h3>Christian McCaffrey (RB, 145.2 pts)</h3></div><div class="card"><h3>Justin Jefferson (WR, 132.6 pts)</h3></div></div><div class="block"><div class="section-title">🏈 This Week\'s Matchup</div><div class="card"><h3>vs. Ravens</h3><p>3-2-0 · <span class="badge">Rival</span></p></div></div><div class="block"><div class="section-title">🎯 Gaps to Fill</div><div class="card"><h3>TE: ranked #12 of 20 — 8.3 pts below avg</h3></div></div><div class="footer-preview">BROUGHT TO YOU BY SUPERLEAGUES</div></div></body></html>';
+}
+
+["primary","secondary","tertiary","accent","background"].forEach(id=>{
+  const inp = document.getElementById(id);
+  const pk = document.getElementById(id+"Picker");
+  inp.addEventListener("input", ()=>{ if(isValidHex(inp.value)){ pk.value = inp.value; applyColors(); saveLocal(); }});
+  pk.addEventListener("input", ()=>{ inp.value = pk.value; applyColors(); saveLocal(); });
+});
+
+document.getElementById("teamName").addEventListener("input", ()=>{
+  document.getElementById("previewName").textContent = document.getElementById("teamName").value || "Team Name";
+  if(!currentLogoData) renderLogoThumb();
+  saveLocal();
+});
+
+document.getElementById("logoFile").addEventListener("change", e=>{
+  const file = e.target.files[0]; if(!file) return;
+  window._lastLogoName = file.name;
+  const reader = new FileReader();
+  reader.onload = evt => { currentLogoData = evt.target.result; renderLogoThumb(); saveLocal(); };
+  reader.readAsDataURL(file);
+});
+
+const teamSelect = document.getElementById("teamSelect");
+TEAMS.forEach(t=>{
+  const opt = document.createElement("option");
+  opt.value = t.slug; opt.textContent = t.name + " (" + t.primary + ")";
+  teamSelect.appendChild(opt);
+});
+teamSelect.addEventListener("change", ()=>{
+  const slug = teamSelect.value; if(!slug) return;
+  const t = TEAMS.find(x => x.slug === slug); if(!t) return;
+  document.getElementById("teamName").value = t.name;
+  document.getElementById("primary").value = t.primary;
+  document.getElementById("secondary").value = t.secondary;
+  document.getElementById("tertiary").value = "#C9A227";
+  document.getElementById("accent").value = t.secondary;
+  document.getElementById("background").value = shift(t.primary, -75);
+  document.getElementById("primaryPicker").value = t.primary;
+  document.getElementById("secondaryPicker").value = t.secondary;
+  document.getElementById("tertiaryPicker").value = "#C9A227";
+  document.getElementById("accentPicker").value = t.secondary;
+  document.getElementById("backgroundPicker").value = shift(t.primary, -75);
+  applyColors(); saveLocal();
+});
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  setState({ teamName:"Team Name", primary:"#0B2265", secondary:"#FFFFFF",
+             tertiary:"#C9A227", accent:"#FB4F14", background:"#0A0B0E" });
+  teamSelect.value = ""; applyColors(); saveLocal();
+});
+
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  const s = getState();
+  const payload = { team_name: s.teamName, colors: { primary: s.primary, secondary: s.secondary, tertiary: s.tertiary, accent: s.accent, background: s.background }, has_logo: !!s.logoData };
+  document.getElementById("jsonText").value = JSON.stringify(payload, null, 2);
+  document.getElementById("jsonModal").classList.add("show");
+});
+document.getElementById("closeJson").addEventListener("click", ()=>{
+  document.getElementById("jsonModal").classList.remove("show");
+});
+
+document.getElementById("downloadBtn").addEventListener("click", ()=>{
+  const html = buildStandaloneHTML();
+  const blob = new Blob([html], {type:"text/html"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = (getState().teamName || "team").toLowerCase().replace(/\s+/g,"-") + ".html";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+(function init(){
+  const saved = loadLocal();
+  if(saved) setState(saved);
+  applyColors(); renderLogoThumb();
+})();
+</script>
+</body>
+</html>
