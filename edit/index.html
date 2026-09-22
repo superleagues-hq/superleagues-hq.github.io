@@ -112,11 +112,8 @@ function hideStatus() {
 }
 
 async function api(action, payload) {
-  const res = await fetch(WEBAPP, {
-    method: "POST",
-    headers: {"Content-Type": "text/plain;charset=utf-8"},  // avoids CORS preflight
-    body: JSON.stringify({action, ...payload})
-  });
+  const params = new URLSearchParams({action, ...payload});
+  const res = await fetch(WEBAPP + "?" + params.toString(), { method: "GET" });
   return await res.json();
 }
 
@@ -174,7 +171,14 @@ document.getElementById("profile_form").addEventListener("submit", async (e) => 
   };
 
   try {
-    const resp = await api("saveProfile", {token, profile});
+    const resp = await api("saveProfile", {
+      token,
+      display_name: profile.display_name,
+      motto: profile.motto,
+      co_manager: profile.co_manager,
+      contact: profile.contact,
+      personal_message: profile.personal_message,
+    });
     if (resp.ok) {
       showStatus("success", "✓ Saved. Your team page will reflect changes on the next update (within 24 hours).");
       btn.textContent = "Saved";
