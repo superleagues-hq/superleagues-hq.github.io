@@ -146,7 +146,7 @@ body{margin:0;background:var(--ui-bg);color:var(--ui-text);font-family:'Inter',-
 
         <div class="top-strip">
           <div><a>First</a> <a>« Prev</a></div>
-          <button class="toggle-btn">View: Away</button>
+          <button class="toggle-btn" onclick="toggleAway()">View: Away</button>
           <div><a>Next »</a> <a>Last</a></div>
         </div>
 
@@ -297,26 +297,55 @@ function setState(s){
   renderLogoThumb();
 }
 
+let isAway = false;
+
+function toggleAway(){
+  isAway = !isAway;
+  const btn = document.querySelector(".toggle-btn");
+  if(btn) btn.textContent = isAway ? "View: Home" : "View: Away";
+  applyColors();
+}
+
 function applyColors(){
   const c = getState();
   if(!isValidHex(c.primary) || !isValidHex(c.secondary) || !isValidHex(c.background)) return;
-  const text = textOn(c.background);
-  const dim = text === "#111111" ? "rgba(0,0,0,0.6)" : "rgba(248,240,232,0.7)";
-  const line = text === "#111111" ? "rgba(0,0,0,0.12)" : "rgba(242,243,245,0.16)";
+
+  let bgColor, bgDarkerColor, cardColor, textColor, dimColor, lineColor, secondaryColor;
+
+  if(isAway){
+    // AWAY mode: white background, dark text, team colors as accents
+    bgColor = "#FFFFFF";
+    bgDarkerColor = "#F0F0F0";
+    cardColor = "#FAFAFA";
+    textColor = "#111111";
+    dimColor = "rgba(0,0,0,0.6)";
+    lineColor = "rgba(0,0,0,0.12)";
+    secondaryColor = c.primary;  // team color for headings in away mode
+  } else {
+    // HOME mode: user background, computed text
+    bgColor = c.background;
+    bgDarkerColor = shift(c.background, -6);
+    cardColor = shift(c.background, 6);
+    textColor = textOn(c.background);
+    dimColor = textColor === "#111111" ? "rgba(0,0,0,0.6)" : "rgba(248,240,232,0.7)";
+    lineColor = textColor === "#111111" ? "rgba(0,0,0,0.12)" : "rgba(242,243,245,0.16)";
+    secondaryColor = c.secondary;
+  }
+
   const t = document.getElementById("teamPage");
-  t.style.setProperty("--page-bg", c.background);
-  t.style.setProperty("--page-bg-darker", shift(c.background,-6));
-  t.style.setProperty("--page-card", shift(c.background,6));
+  t.style.setProperty("--page-bg", bgColor);
+  t.style.setProperty("--page-bg-darker", bgDarkerColor);
+  t.style.setProperty("--page-card", cardColor);
   t.style.setProperty("--page-primary", c.primary);
-  t.style.setProperty("--page-secondary", c.secondary);
+  t.style.setProperty("--page-secondary", secondaryColor);
   t.style.setProperty("--page-tertiary", c.tertiary);
   t.style.setProperty("--page-accent", c.accent);
-  t.style.setProperty("--page-text", text);
-  t.style.setProperty("--page-dim", dim);
-  t.style.setProperty("--page-line", line);
+  t.style.setProperty("--page-text", textColor);
+  t.style.setProperty("--page-dim", dimColor);
+  t.style.setProperty("--page-line", lineColor);
   t.style.setProperty("--page-primary-text", textOn(c.primary));
   t.style.setProperty("--page-accent-text", textOn(c.accent));
-  document.getElementById("previewFrame").style.background = c.background;
+  document.getElementById("previewFrame").style.background = bgColor;
   document.getElementById("previewName").textContent = c.teamName || "Team Name";
 }
 
