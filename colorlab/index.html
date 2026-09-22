@@ -488,12 +488,6 @@ const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzt1JQEu60TxfDw2WeSj
 
 let lastSavedId = null;
 
-async function getSecret(){
-  // We don't have the secret in the browser — the sheet accepts theme saves
-  // without the shared secret (bypassed in Apps Script for these actions).
-  return "";
-}
-
 async function cloudSave(){
   const s = getState();
   const btn = document.getElementById("saveCloudBtn");
@@ -501,39 +495,40 @@ async function cloudSave(){
   btn.textContent = "Saving...";
   btn.disabled = true;
 
+  const bodyObj = {
+    action: "saveTheme",
+    secret: "",
+    theme: {
+      id: lastSavedId || null,
+      team_name: s.teamName,
+      team_slug: (s.teamName || "team").toLowerCase().replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,""),
+      primary: s.primary,
+      secondary: s.secondary,
+      tertiary: s.tertiary,
+      accent: s.accent,
+      background: s.background,
+      logo_data: s.logoData || ""
+    }
+  };
+
   try {
-    const payload = {
-      action: "saveTheme",
-      secret: "",
-      theme: {
-        id: lastSavedId || null,
-        team_name: s.teamName,
-        team_slug: (s.teamName || "team").toLowerCase().replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,""),
-        primary: s.primary,
-        secondary: s.secondary,
-        tertiary: s.tertiary,
-        accent: s.accent,
-        background: s.background,
-        logo_data: s.logoData || ""
-      }
-    };
     const res = await fetch(WEBAPP_URL, {
       method: "POST",
       headers: {"Content-Type": "text/plain;charset=utf-8"},
-      body: JSON.stringify(payload)
+      body: JSON.stringify(bodyObj)
     });
     const data = await res.json();
     if(data.ok){
       lastSavedId = data.id;
       btn.textContent = "✓ Saved";
-      setTimeout(()=>{ btn.textContent = origText; btn.disabled = false; }, 2000);
+      setTimeout(function(){ btn.textContent = origText; btn.disabled = false; }, 2000);
     } else {
       btn.textContent = "✗ " + (data.error || "Error");
-      setTimeout(()=>{ btn.textContent = origText; btn.disabled = false; }, 3000);
+      setTimeout(function(){ btn.textContent = origText; btn.disabled = false; }, 3000);
     }
   } catch(e){
     btn.textContent = "✗ Network error";
-    setTimeout(()=>{ btn.textContent = origText; btn.disabled = false; }, 3000);
+    setTimeout(function(){ btn.textContent = origText; btn.disabled = false; }, 3000);
   }
 }
 
@@ -552,7 +547,7 @@ async function cloudList(){
       return;
     }
     list.innerHTML = "";
-    data.themes.forEach(t => {
+    data.themes.forEach(function(t){
       const row = document.createElement("div");
       row.style.cssText = "display:flex;align-items:center;gap:10px;padding:12px;background:#0A0B0E;border:1px solid rgba(242,243,245,0.12);border-radius:8px;margin-bottom:8px;";
       row.innerHTML = 
@@ -568,9 +563,8 @@ async function cloudList(){
         '<button data-id="'+t.id+'" class="load-theme-btn" style="padding:8px 14px;background:#C9A227;color:#000;border:none;border-radius:6px;font-family:Oswald,sans-serif;font-weight:700;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">Load</button>';
       list.appendChild(row);
     });
-    // Wire load buttons
-    list.querySelectorAll(".load-theme-btn").forEach(b => {
-      b.addEventListener("click", () => cloudLoad(b.dataset.id));
+    list.querySelectorAll(".load-theme-btn").forEach(function(b){
+      b.addEventListener("click", function(){ cloudLoad(b.dataset.id); });
     });
   } catch(e){
     list.innerHTML = '<div style="text-align:center;color:#c00;padding:20px;">Error: '+e.message+'</div>';
@@ -608,7 +602,7 @@ async function cloudLoad(id){
 
 document.getElementById("saveCloudBtn").addEventListener("click", cloudSave);
 document.getElementById("listCloudBtn").addEventListener("click", cloudList);
-document.getElementById("closeThemes").addEventListener("click", () => {
+document.getElementById("closeThemes").addEventListener("click", function(){
   document.getElementById("themesModal").classList.remove("show");
 });
 
